@@ -8,19 +8,27 @@ import win32com.client
 # Creating shortcut file of program
 current_dir = Path().resolve()
 startup_folder = str(Path.home() / 'AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup')
-nameOfShortcut = os.path.join(startup_folder,'folder_manager.lnk')
 target = os.path.join(current_dir,'main.exe')
-
+nameOfShortcut = os.path.join(startup_folder,'folder_manager.lnk')
+f = open("info.txt",'w')
 if not os.path.isfile(nameOfShortcut):
+    f.write("not_present")
+    f.close()
+else:
+    f.write("present")
+    f.close()
+
+f = open("info.txt",'r')
+check = f.read()
+if check == 'not_present':
     shell = win32com.client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortcut(nameOfShortcut)
     shortcut.Targetpath = target
     shortcut.save()
 
-
 l = os.listdir(current_dir)
 
-# Getting static path of downloads folder
+# Getting path of downloads folder
 downloads = str(Path.home() / "Downloads")
 
 # Creating all folder that we needed to seperate files
@@ -142,12 +150,9 @@ def runMain(downloads,list):
 
 # runMain(downloads,list)
 
-# Running a loop in every 5 seconds
+# Running a loop in every 15 seconds
 while True:
-    # Getting dynamic downloads path
-    downloads = str(Path.home() / "Downloads")
     list = os.listdir(downloads)
     if not list == orignalCon:
-        print("change")
         runMain(downloads,list)
-    time.sleep(5)
+    time.sleep(15)
